@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { ApplicantType, APPLICANT_TYPES } from "@/lib/types";
+import { verifyOrganizerCode } from "@/app/signup/actions";
 
 export default function SignupForm({
   defaultType,
@@ -17,6 +18,7 @@ export default function SignupForm({
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [organizerCode, setOrganizerCode] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -24,6 +26,20 @@ export default function SignupForm({
     e.preventDefault();
     setError(null);
     setLoading(true);
+
+    // Organizer is the only type with elevated review access, so it's
+    // gated behind an invite code checked server-side (src/app/signup/
+    // actions.ts) - the real code never reaches the client. Check this
+    // before creating an auth account at all, so a wrong guess doesn't
+    // leave a dangling unconfirmed user behind.
+    if (type === "organizer") {
+      const valid = await verifyOrganizerCode(organizerCode);
+      if (!valid) {
+        setError("That organizer access code isn't right.");
+        setLoading(false);
+        return;
+      }
+    }
 
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
@@ -117,6 +133,19 @@ export default function SignupForm({
           </span>
         </label>
       </fieldset>
+
+      {type === "organizer" && (
+        <div>
+          <label className="text-sm font-medium">Organizer access code</label>
+          <input
+            required
+            value={organizerCode}
+            onChange={(e) => setOrganizerCode(e.target.value)}
+            placeholder="Ask an existing organizer for this"
+            className="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2"
+          />
+        </div>
+      )}
 
       <div>
         <label className="text-sm font-medium">Full name</label>

@@ -210,3 +210,31 @@ defaults (cream + terracotta, dark + neon, rounded-card-with-shadow kit —
 see docs/DESIGN.md for the full list of what was avoided and why). If
 reskinning, it's the *principles* in docs/DESIGN.md worth preserving, not
 necessarily the exact hex values.
+
+---
+
+### D13. Organizer signup gated behind an invite code
+**Status: DEFAULT (open to revisit, especially the "no rate limiting" gap noted below)**
+
+Once D1 split judge out as its own applicant type, "organizer" was left as
+the *only* type that grants elevated access — `is_organizer()` (D6) lets
+that account read every profile/application and grade anything, the
+moment the profile row is created. A self-serve radio button with zero
+gate meant anyone who found `/signup` could grant themselves reviewer
+access to the whole applicant pool. Judge/mentor/volunteer don't have this
+problem — applying as one of those is exactly as privileged as applying as
+a hacker; an organizer still has to review and accept it.
+
+**Fix:** an `ORGANIZER_INVITE_CODE` env var (server-only, no
+`NEXT_PUBLIC_` prefix — never sent to the browser). Selecting "organizer"
+at signup shows an extra access-code field; `src/app/signup/actions.ts`
+(`verifyOrganizerCode`, a Server Action) checks it against the env var
+*before* `SignupForm.tsx` even calls `supabase.auth.signUp()` — so a wrong
+guess doesn't create a dangling unconfirmed auth user, and the real code
+value never reaches client-side JS.
+
+**Known gap:** no rate limiting on code attempts — fine for a low-traffic
+hackathon signup page, worth adding (e.g. via Supabase's built-in rate
+limits or a lightweight IP-based check) before this sees real internet
+traffic. Rotate the code if it leaks, since it's a single shared secret,
+not per-organizer.
