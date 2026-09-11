@@ -1,4 +1,13 @@
 import SignupForm from "@/components/SignupForm";
+import { ApplicantType } from "@/lib/types";
+
+const VALID_TYPES: ApplicantType[] = [
+  "hacker",
+  "judge",
+  "mentor",
+  "volunteer",
+  "organizer",
+];
 
 export default async function SignupPage({
   searchParams,
@@ -6,7 +15,9 @@ export default async function SignupPage({
   searchParams: Promise<{ type?: string }>;
 }) {
   const { type } = await searchParams;
-  const defaultType = type === "organizer" ? "organizer" : "hacker";
+  const defaultType = VALID_TYPES.includes(type as ApplicantType)
+    ? (type as ApplicantType)
+    : "hacker";
 
   return (
     <div className="mx-auto max-w-md px-6 py-16">

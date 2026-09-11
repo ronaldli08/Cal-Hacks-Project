@@ -11,21 +11,28 @@ application. Hackers also get a team formation board to find teammates.
 - Supabase (Postgres + Auth) via `@supabase/ssr`
 - Deployed on Vercel
 
-## How the two account types work
+## How the account types work
 
-There's no separate "admin" account to seed manually. Signing up as an
-**organizer** *is* how you get reviewer access — an organizer submits their
-own short application (background, expertise, availability) and immediately
-gets access to the review queue, since in a real hackathon the organizers
-are also the judges. Signing up as a **hacker** gets you the applicant
-dashboard and the team board instead. `profiles.type` is the single source
-of truth every page checks to decide what to show.
+There are five account types on `profiles.type`: four applicant types —
+**hacker**, **judge**, **mentor**, **volunteer** — each with their own
+application questions, and a separate **organizer** type that isn't an
+applicant at all. There's no separate "admin" account to seed manually:
+signing up as an organizer *is* how you get reviewer access — an organizer
+submits their own short application (background, expertise, availability)
+and immediately gets access to the review queue. Judge is a real applicant
+type here (someone who judges demos/projects at the event), distinct from
+organizer (someone who reviews applications during intake) — see D1 in
+`docs/DECISIONS.md` for why those got split apart. Every applicant type
+lands on the same `/dashboard` after applying; only hackers additionally
+see the team board. `profiles.type` is the single source of truth every
+page checks to decide what to show.
 
 ## Data model
 
-- `profiles` — one row per account; `type` is `hacker` or `organizer`.
+- `profiles` — one row per account; `type` is `hacker`, `judge`, `mentor`,
+  `volunteer`, or `organizer`.
 - `applications` — one row per account (`applicant_id` is unique). Answers
-  are stored as `jsonb` because the two types ask different questions
+  are stored as `jsonb` because each type asks different questions
   (see `src/lib/questions.ts`) — a fixed-column schema would mean a lot of
   always-null columns. `status`, `score`, and `organizer_notes` live on the
   same row since they're set together during review.

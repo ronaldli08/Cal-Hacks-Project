@@ -5,21 +5,24 @@
 -- Tables
 -- ─────────────────────────────────────────────────────────────
 
+-- 'hacker', 'judge', 'mentor', 'volunteer' are applicant types (each with
+-- their own question set, see src/lib/questions.ts). 'organizer' is not a
+-- fifth applicant type — it's the reviewer role; see docs/DECISIONS.md D1.
 create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
   email text not null,
   full_name text not null,
-  type text not null check (type in ('hacker', 'organizer')),
+  type text not null check (type in ('hacker', 'judge', 'mentor', 'volunteer', 'organizer')),
   created_at timestamptz not null default now()
 );
 
--- One application per account. `answers` is jsonb because the hacker and
--- organizer forms ask different questions (see src/lib/questions.ts) — a
--- fixed set of columns would mean a lot of always-null columns per row.
+-- One application per account. `answers` is jsonb because each applicant
+-- type asks different questions (see src/lib/questions.ts) — a fixed set
+-- of columns would mean a lot of always-null columns per row.
 create table public.applications (
   id uuid primary key default gen_random_uuid(),
   applicant_id uuid not null unique references public.profiles (id) on delete cascade,
-  type text not null check (type in ('hacker', 'organizer')),
+  type text not null check (type in ('hacker', 'judge', 'mentor', 'volunteer', 'organizer')),
   status text not null default 'submitted'
     check (status in ('submitted', 'under_review', 'accepted', 'waitlisted', 'rejected')),
   answers jsonb not null default '{}'::jsonb,

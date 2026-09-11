@@ -16,35 +16,56 @@ importantly — a **status** flag. Read the status before changing anything:
 
 ---
 
-### D1. Two applicant types: Hacker + Organizer (not Judge/Mentor/Volunteer)
-**Status: LOCKED (user)**
+### D1. Four applicant types (Hacker/Judge/Mentor/Volunteer) + separate Organizer reviewer role
+**Status: LOCKED (user)** — revised from the original hand-off version below.
 
-The assignment allows picking any two of hacker/judge/mentor/volunteer. We
-picked hacker + organizer, where "organizer" is *not* one of the four
+The assignment allows picking any two of hacker/judge/mentor/volunteer as
+applicant types. The original build picked just hacker + organizer, with
+"organizer" standing in as a merged judge+reviewer role (see the
+superseded reasoning kept below for context). That was revisited: all four
+listed applicant types are now real, distinct applicant types — each with
+their own application questions in `src/lib/questions.ts` — and
+`organizer` is a fifth, separate value on `profiles.type` that means
+"reviewer," not "judge."
+
+**Why split judge out from organizer:** at a real hackathon, "judge" means
+someone who judges demos/projects at the end of the event — a
+domain-expert applicant type like mentor or volunteer. "Organizer" means
+someone reviewing/grading *applications* during the intake period. Those
+are different jobs done by (usually) different people; collapsing them
+into one type was a time-boxed simplification, not a real modeling choice.
+
+**What's preserved from the original reasoning:** organizer signup is
+still fully self-serve — no admin/service-role seeding step. An organizer
+still submits their own short background application (company/role,
+expertise, availability) and gets immediate review-queue access. That
+part of D1's original "how does anyone become an organizer" answer didn't
+need to change; only the "judge = organizer" merge did.
+
+**If you're tempted to change this:** `profiles.type` is
+`'hacker' | 'judge' | 'mentor' | 'volunteer' | 'organizer'`
+(`src/lib/types.ts`, `APPLICANT_TYPES` for the four applicant-side ones).
+Don't bolt an `is_admin`/`is_organizer` boolean onto `profiles` instead —
+`organizer` being its own type value (checked via the existing
+`is_organizer()` function, D6) is still the single source of truth for
+review access.
+
+<details>
+<summary>Superseded reasoning (original hand-off version of D1)</summary>
+
+We picked hacker + organizer, where "organizer" is *not* one of the four
 listed options — it's a deliberate rename/merge of "judge" with the
-reviewer role.
+reviewer role. In this design there was no separate admin/reviewer role
+layered on top of an applicant type; signing up as an "organizer" *was*
+how you got review/grading access. Alternatives considered: hacker + judge
+as two applicant types, with a third, separately-provisioned
+"organizer/admin" role that reviews both — rejected at the time because it
+needs an out-of-band way to create that first admin account. (That
+concern is still valid and is why the *organizer* role specifically stayed
+self-serve in the revised version above — only the judge/organizer merge
+was undone.)
 
-**Why:** In this design there is no separate admin/reviewer role layered on
-top of an applicant type. Signing up as an "organizer" *is* how you get
-review/grading access — an organizer submits their own short application
-(background, expertise, availability) and gets immediate access to the
-review queue, modeling the real fact that the people organizing this
-hackathon are also the ones judging it. This also removes any need for a
-manual seeding step (service-role script, hand-edited SQL to flag an
-admin) — the whole "how does anyone become an organizer" question is
-answered by the signup flow itself.
-
-**Alternatives considered:** hacker + judge as two applicant types, with a
-third, separately-provisioned "organizer/admin" role that reviews both.
-Rejected because it needs an out-of-band way to create that first admin
-account, which is exactly the kind of setup friction not worth the time.
-
-**If you're tempted to change this:** don't reintroduce a `judge` type or
-an `is_admin`/`is_organizer` flag bolted onto `profiles` — `profiles.type`
-(`'hacker' | 'organizer'`) is meant to be the single source of truth. If
-mentor/volunteer types get added later, decide which "side" (hacker-like
-applicant flow vs. organizer-like reviewer flow) they belong to rather than
-inventing a third parallel UI.
+</details>
 
 ---
 

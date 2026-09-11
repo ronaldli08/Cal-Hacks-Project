@@ -25,13 +25,13 @@ export default async function ApplyPage() {
     .maybeSingle();
 
   if (existing) {
-    redirect(profile.type === "hacker" ? "/dashboard" : "/organizer");
+    redirect(profile.type === "organizer" ? "/organizer" : "/dashboard");
   }
 
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
-      <h1 className="font-display text-3xl font-bold">
-        {profile.type === "hacker" ? "Hacker application" : "Organizer application"}
+      <h1 className="font-display text-3xl font-bold capitalize">
+        {profile.type} application
       </h1>
       <p className="mt-2 text-ink-soft">
         Take your time — you can only submit once.

@@ -43,7 +43,7 @@ export default function ApplyForm({
       return;
     }
 
-    router.push(type === "hacker" ? "/dashboard" : "/organizer");
+    router.push(type === "organizer" ? "/organizer" : "/dashboard");
     router.refresh();
   }
 

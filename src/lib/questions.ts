@@ -51,6 +51,93 @@ export const QUESTIONS: Record<ApplicantType, Question[]> = {
       type: "textarea",
     },
   ],
+  judge: [
+    {
+      id: "company_role",
+      label: "Current company & role",
+      type: "text",
+      placeholder: "Staff Engineer, Acme Corp",
+      required: true,
+    },
+    {
+      id: "expertise_areas",
+      label: "Areas of expertise",
+      type: "text",
+      placeholder: "ML, mobile, product design",
+      required: true,
+    },
+    {
+      id: "judging_experience",
+      label: "Have you judged a hackathon or demo day before?",
+      type: "select",
+      options: ["Yes, multiple times", "Yes, once", "No, first time"],
+      required: true,
+    },
+    {
+      id: "availability",
+      label: "Availability for final-round judging",
+      type: "select",
+      options: ["Full judging window", "Partial — first half", "Partial — second half"],
+      required: true,
+    },
+    {
+      id: "why_judge",
+      label: "Why do you want to judge this hackathon?",
+      type: "textarea",
+      placeholder: "What draws you to evaluating other people's projects?",
+      required: true,
+    },
+  ],
+  mentor: [
+    {
+      id: "company_role",
+      label: "Current company & role",
+      type: "text",
+      placeholder: "Senior Engineer, Acme Corp",
+      required: true,
+    },
+    {
+      id: "expertise_areas",
+      label: "What can you mentor teams on?",
+      type: "text",
+      placeholder: "React, backend architecture, pitching",
+      required: true,
+    },
+    {
+      id: "availability",
+      label: "Availability",
+      type: "select",
+      options: ["Both days", "Day 1 only", "Day 2 only"],
+      required: true,
+    },
+    {
+      id: "why_mentor",
+      label: "Why do you want to mentor at this hackathon?",
+      type: "textarea",
+      required: true,
+    },
+  ],
+  volunteer: [
+    {
+      id: "availability",
+      label: "Which shifts can you cover?",
+      type: "select",
+      options: ["Full event", "Day 1 only", "Day 2 only", "Check-in / registration only"],
+      required: true,
+    },
+    {
+      id: "relevant_experience",
+      label: "Any relevant experience? (optional)",
+      type: "textarea",
+      placeholder: "Event staffing, past hackathon volunteering, etc.",
+    },
+    {
+      id: "why_volunteer",
+      label: "Why do you want to volunteer at this hackathon?",
+      type: "textarea",
+      required: true,
+    },
+  ],
   organizer: [
     {
       id: "company_role",
@@ -82,7 +169,7 @@ export const QUESTIONS: Record<ApplicantType, Question[]> = {
     },
     {
       id: "why_organize",
-      label: "Why do you want to help organize and judge this hackathon?",
+      label: "Why do you want to help organize and review applications for this hackathon?",
       type: "textarea",
       required: true,
     },

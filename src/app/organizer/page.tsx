@@ -12,7 +12,14 @@ const STATUS_FILTERS: (ApplicationStatus | "all")[] = [
   "waitlisted",
   "rejected",
 ];
-const TYPE_FILTERS: (ApplicantType | "all")[] = ["all", "hacker", "organizer"];
+const TYPE_FILTERS: (ApplicantType | "all")[] = [
+  "all",
+  "hacker",
+  "judge",
+  "mentor",
+  "volunteer",
+  "organizer",
+];
 
 export default async function OrganizerPage({
   searchParams,

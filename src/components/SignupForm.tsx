@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { ApplicantType } from "@/lib/types";
+import { ApplicantType, APPLICANT_TYPES } from "@/lib/types";
 
 export default function SignupForm({
   defaultType,
@@ -72,27 +72,50 @@ export default function SignupForm({
 
   return (
     <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-      <fieldset className="flex gap-3">
-        {(["hacker", "organizer"] as const).map((option) => (
-          <label
-            key={option}
-            className={`flex-1 cursor-pointer rounded-xl border px-4 py-3 text-center capitalize ${
-              type === option
-                ? "border-ink bg-surface"
-                : "border-line text-ink-soft"
-            }`}
-          >
-            <input
-              type="radio"
-              name="type"
-              value={option}
-              checked={type === option}
-              onChange={() => setType(option)}
-              className="sr-only"
-            />
-            {option}
-          </label>
-        ))}
+      <fieldset>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {APPLICANT_TYPES.map((option) => (
+            <label
+              key={option}
+              className={`cursor-pointer rounded-xl border px-4 py-3 text-center capitalize ${
+                type === option
+                  ? "border-ink bg-surface"
+                  : "border-line text-ink-soft"
+              }`}
+            >
+              <input
+                type="radio"
+                name="type"
+                value={option}
+                checked={type === option}
+                onChange={() => setType(option)}
+                className="sr-only"
+              />
+              {option}
+            </label>
+          ))}
+        </div>
+
+        <label
+          className={`mt-3 block cursor-pointer rounded-xl border px-4 py-3 ${
+            type === "organizer"
+              ? "border-ink bg-surface"
+              : "border-line text-ink-soft"
+          }`}
+        >
+          <input
+            type="radio"
+            name="type"
+            value="organizer"
+            checked={type === "organizer"}
+            onChange={() => setType("organizer")}
+            className="sr-only"
+          />
+          <span className="font-medium capitalize">organizer</span>
+          <span className="block text-xs text-ink-soft">
+            Reviews and grades applications — not an applicant type.
+          </span>
+        </label>
       </fieldset>
 
       <div>

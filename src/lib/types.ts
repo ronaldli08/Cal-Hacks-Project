@@ -1,4 +1,19 @@
-export type ApplicantType = "hacker" | "organizer";
+export type ApplicantType =
+  | "hacker"
+  | "judge"
+  | "mentor"
+  | "volunteer"
+  | "organizer";
+
+// The four applicant-side types from the assignment brief (hacker + at
+// least one more). "organizer" is deliberately excluded — it's the
+// reviewer role, not an applicant type; see docs/DECISIONS.md D1.
+export const APPLICANT_TYPES: Exclude<ApplicantType, "organizer">[] = [
+  "hacker",
+  "judge",
+  "mentor",
+  "volunteer",
+];
 
 export type ApplicationStatus =
   | "submitted"

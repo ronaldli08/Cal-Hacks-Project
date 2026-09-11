@@ -23,9 +23,9 @@ export default async function Home() {
             worth staying up for.
           </h1>
           <p className="mt-6 max-w-md text-lg text-ink-soft">
-            Apply as a hacker to build, or as an organizer to help review
-            applications and judge on the day. One portal, real applications,
-            real decisions.
+            Apply as a hacker, judge, mentor, or volunteer — or sign up as an
+            organizer to help review applications. One portal, real
+            applications, real decisions.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
@@ -35,10 +35,10 @@ export default async function Home() {
               Apply as a hacker
             </Link>
             <Link
-              href="/signup?type=organizer"
+              href="/signup"
               className="rounded-full border border-line px-6 py-3 font-medium hover:border-ink"
             >
-              Apply as an organizer
+              Judge, mentor, volunteer, or organize
             </Link>
           </div>
         </div>

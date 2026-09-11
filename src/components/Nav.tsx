@@ -39,14 +39,16 @@ export default async function Nav() {
               </Link>
             </>
           )}
-          {user && profile?.type === "hacker" && (
+          {user && profile && profile.type !== "organizer" && (
             <>
               <Link href="/dashboard" className="text-ink-soft hover:text-ink">
                 Dashboard
               </Link>
-              <Link href="/teams" className="text-ink-soft hover:text-ink">
-                Team board
-              </Link>
+              {profile.type === "hacker" && (
+                <Link href="/teams" className="text-ink-soft hover:text-ink">
+                  Team board
+                </Link>
+              )}
               <SignOutButton />
             </>
           )}
