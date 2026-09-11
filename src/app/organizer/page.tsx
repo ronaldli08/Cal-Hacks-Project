@@ -36,7 +36,7 @@ export default async function OrganizerPage({
 
   let query = supabase
     .from("applications")
-    .select("*, profiles(full_name, email)")
+    .select("*, profiles!applicant_id(full_name, email)")
     .order("created_at", { ascending: false });
 
   if (status !== "all") query = query.eq("status", status);

@@ -26,7 +26,7 @@ export default async function ApplicationDetailPage({
 
   const { data: application } = await supabase
     .from("applications")
-    .select("*, profiles(full_name, email)")
+    .select("*, profiles!applicant_id(full_name, email)")
     .eq("id", id)
     .single<Application & { profiles: { full_name: string; email: string } }>();
 
