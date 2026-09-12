@@ -5,10 +5,12 @@ export default async function Home() {
   let applicantCount: number | null = null;
   try {
     const supabase = await createClient();
-    const { count } = await supabase
-      .from("applications")
-      .select("*", { count: "exact", head: true });
-    applicantCount = count;
+    // Plain `select count(*)` is subject to RLS - a logged-out visitor
+    // isn't allowed to see any row, so it'd always return 0 regardless of
+    // the real total. application_count() is a security-definer function
+    // that returns just the count, bypassing that (see schema.sql).
+    const { data } = await supabase.rpc("application_count");
+    applicantCount = data ?? null;
   } catch {
     applicantCount = null;
   }
@@ -23,7 +25,7 @@ export default async function Home() {
             worth staying up for.
           </h1>
           <p className="mt-6 max-w-md text-lg text-ink-soft">
-            Apply as a hacker, judge, mentor, or volunteer — or sign up as an
+            Apply as a hacker, judge, mentor, or volunteer, or sign up as an
             organizer to help review applications. One portal, real
             applications, real decisions.
           </p>

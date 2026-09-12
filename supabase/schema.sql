@@ -75,6 +75,22 @@ as $$
   );
 $$;
 
+-- Public landing-page stat ("N applications submitted so far"). A plain
+-- `select count(*) from applications` from an anonymous visitor would
+-- return 0 every time - the applications_select RLS policy only lets you
+-- see your own row or everyone's if you're an organizer, so a logged-out
+-- visitor is allowed to see none of them. This bypasses RLS via security
+-- definer but only ever returns a count, never row data, so it doesn't
+-- reintroduce the thing RLS is protecting.
+create function public.application_count()
+returns bigint
+language sql
+security definer
+stable
+as $$
+  select count(*) from public.applications;
+$$;
+
 -- ─────────────────────────────────────────────────────────────
 -- Row level security
 -- ─────────────────────────────────────────────────────────────
